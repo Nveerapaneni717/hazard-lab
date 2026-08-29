@@ -1,0 +1,49 @@
+# environments
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# build
+dist/
+build/
+
+# secrets and local config -- never commit
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+credentials*
+secrets*
+
+# local AI-assistant / IDE state -- routinely contains machine paths,
+# absolute directories and tool permissions. Never commit any of it.
+.aider*
+.claude/
+.continue/
+.cursor/
+.windsurf/
+.vscode/
+.idea/
+
+# generated outputs (regenerate with the scripts; do not version)
+results/
+outputs/
+*.parquet
+!hazardlab/data/*.csv
+
+# editor / OS noise
+.DS_Store
+Thumbs.db
+desktop.ini
+*.bak
+*.orig
+*.prebrand
+*~
