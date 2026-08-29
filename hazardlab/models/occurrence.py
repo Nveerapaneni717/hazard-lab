@@ -43,6 +43,17 @@ class OccurrenceModel:
         self.feature_names: list[str] = []
 
     def fit(self, X: pd.DataFrame, y: pd.Series) -> OccurrenceModel:
+        n_classes = y.nunique()
+        if n_classes < 2:
+            only = y.iloc[0] if len(y) else "empty"
+            raise ValueError(
+                f"the target has only one class ({only!r}), so there is nothing "
+                "to learn. The usual cause is a mismatch between your index "
+                "series and the spec: check that the series really is the "
+                "spec's `index_name`, that its units match `index_units`, and "
+                "that `higher_is_worse` points the right way. An inverted-scale "
+                "spec applied to a rising index marks every period as an event."
+            )
         self.feature_names = list(X.columns)
         base = _base_pipeline(self.C)
         self.pipeline = (

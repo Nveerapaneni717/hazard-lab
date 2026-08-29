@@ -6,6 +6,7 @@ import pytest
 from hazardlab.features.builder import annual_maxima, build_features, build_target
 from hazardlab.io.series import load_sample
 from hazardlab.models.monte_carlo import MonteCarloEngine
+from hazardlab.models.occurrence import OccurrenceModel
 from hazardlab.models.return_period import ReturnPeriodAnalyzer
 from hazardlab.models.severity import blend
 from hazardlab.registry import get_hazard
@@ -128,3 +129,15 @@ def test_blend_is_a_distribution_and_respects_weight():
 def test_blend_rejects_bad_weight():
     with pytest.raises(ValueError):
         blend({"A": 1.0}, {"A": 1.0}, 1.5)
+
+
+# --- guard: a spec applied to the wrong series ------------------------------
+def test_single_class_target_raises_a_useful_error(spec, oni):
+    """Pointing an inverted-scale spec at a rising index makes every period an
+    'event'. sklearn's own error is opaque; ours names the likely cause."""
+    monsoon = get_hazard("indian_monsoon")     # higher_is_worse=False, threshold 96
+    y = build_target(oni, monsoon, horizon=6)  # every ONI value is <= 96
+    assert y.nunique() == 1
+    X = build_features(oni, monsoon).loc[y.index]
+    with pytest.raises(ValueError, match="only one class"):
+        OccurrenceModel().fit(X, y)
