@@ -88,3 +88,57 @@ def test_validate_catches_missing_class_params():
         class_params={"A": ClassParams((1.5, 0.1, 1.0, 2.0), 3)},   # B missing
     )
     assert any("without simulation params" in e for e in bad.validate())
+
+
+# --- runtime registration ---------------------------------------------------
+def _toy_spec(key="toy_peril"):
+    return HazardSpec(
+        key=key, name="Toy", index_name="X", index_units="u", description="d",
+        severity_classes=("Low", "High"),
+        severity_thresholds={"Low": 1.0, "High": 2.0},
+        events=tuple(HistoricalEvent(1990 + i, 1990 + i, 1.0 + 0.1 * i) for i in range(12)),
+        class_params={"Low": ClassParams((1.4, 0.2, 1.0, 2.0), 3),
+                      "High": ClassParams((2.5, 0.3, 2.0, 3.0), 3)},
+    )
+
+
+def test_register_and_retrieve_a_runtime_spec():
+    from hazardlab.registry import get_hazard, register, unregister
+    try:
+        register(_toy_spec())
+        assert "toy_peril" in available()
+        assert get_hazard("toy_peril").name == "Toy"
+    finally:
+        unregister("toy_peril")
+    assert "toy_peril" not in available()
+
+
+def test_register_refuses_to_shadow_silently():
+    from hazardlab.registry import register, unregister
+    try:
+        register(_toy_spec())
+        with pytest.raises(KeyError):
+            register(_toy_spec())                       # already registered
+        with pytest.raises(KeyError):
+            register(_toy_spec(key="elnino"))           # would shadow a built-in
+        register(_toy_spec(), overwrite=True)           # explicit is fine
+    finally:
+        unregister("toy_peril")
+
+
+def test_register_rejects_a_bad_spec():
+    from hazardlab.registry import register
+    bad = HazardSpec(
+        key="bad_toy", name="bad", index_name="X", index_units="u", description="d",
+        severity_classes=("A",), severity_thresholds={"A": 1.0},
+        events=(HistoricalEvent(2000, 2000, 1.5),),
+        class_params={"A": ClassParams((1.5, 0.1, 2.0, 1.0), 3)},   # lo > hi
+    )
+    with pytest.raises(ValueError):
+        register(bad)
+
+
+def test_register_rejects_a_non_spec():
+    from hazardlab.registry import register
+    with pytest.raises(TypeError):
+        register({"key": "nope"})

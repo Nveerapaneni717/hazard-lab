@@ -74,7 +74,7 @@ python examples/01_quickstart.py --hazard indian_monsoon
 
 ## Swapping the hazard
 
-This is the whole point. A hazard is one file in `hazards/`:
+This is the whole point. A hazard is one file in `hazardlab/hazards/`:
 
 ```python
 from hazardlab.spec import ClassParams, HazardSpec, HistoricalEvent
@@ -93,8 +93,18 @@ SPEC = HazardSpec(
 )
 ```
 
-Drop it in `hazards/`, and `get_hazard("my_peril")` finds it. `spec.validate()`
+Drop it in `hazardlab/hazards/`, and `get_hazard("my_peril")` finds it. `spec.validate()`
 runs automatically and tells you what is incoherent before anything else does.
+
+**Installed hazard-lab as a dependency rather than cloning it?** Keep your specs
+in your own project and register them at runtime — no need to edit site-packages:
+
+```python
+from hazardlab import register, get_hazard, MonteCarloEngine
+
+register(my_spec)                  # validated on the way in
+spec = get_hazard("my_peril")
+```
 
 Full walkthrough: [`examples/02_add_a_hazard.md`](examples/02_add_a_hazard.md)
 
@@ -125,11 +135,11 @@ hazardlab/
   models/return_period.py  GEV block maxima → return levels
   models/monte_carlo.py    occurrence → severity → conditional impacts
   impact/translator.py     severity → consequence, and its sensitivity
-hazards/                   one file per peril
+  hazards/               one file per peril
 examples/                  runnable quickstart + how to add a hazard
 ```
 
-The dependency arrow only ever points one way: `hazards/` knows about
+The dependency arrow only ever points one way: `hazardlab/hazards/` knows about
 `hazardlab/`, never the reverse.
 
 ## What it deliberately does not do

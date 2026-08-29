@@ -19,7 +19,7 @@ from hazardlab.models.monte_carlo import MonteCarloEngine
 from hazardlab.models.occurrence import OccurrenceModel
 from hazardlab.models.return_period import ReturnPeriodAnalyzer
 from hazardlab.models.severity import SeverityModel, blend
-from hazardlab.registry import available, get_hazard
+from hazardlab.registry import available, get_hazard, register, unregister
 from hazardlab.spec import ClassParams, HazardSpec, HistoricalEvent
 
 __version__ = "0.1.0"
@@ -32,6 +32,8 @@ __all__ = [
     # registry
     "get_hazard",
     "available",
+    "register",
+    "unregister",
     # data and features
     "load_sample",
     "load_csv",

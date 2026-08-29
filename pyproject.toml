@@ -23,10 +23,10 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
 packages = ["hazardlab", "hazardlab.io", "hazardlab.features",
-            "hazardlab.models", "hazardlab.impact", "hazards"]
+            "hazardlab.models", "hazardlab.impact", "hazardlab.hazards"]
 
 [tool.setuptools.package-data]
-hazardlab = ["data/*.csv"]
+hazardlab = ["data/*.csv", "py.typed"]
 
 [tool.ruff]
 line-length = 100

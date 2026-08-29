@@ -24,7 +24,7 @@ python examples/01_quickstart.py --sims 500
 
 ## What makes a good contribution here
 
-**A new hazard spec.** One file in `hazards/`, following
+**A new hazard spec.** One file in `hazardlab/hazards/`, following
 [`examples/02_add_a_hazard.md`](examples/02_add_a_hazard.md). Say in `notes`
 whether the catalogue is real or illustrative, and cite the source. A spec with
 a real catalogue and honest placeholder impacts is more useful than one with

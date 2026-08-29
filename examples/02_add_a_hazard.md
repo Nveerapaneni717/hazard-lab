@@ -16,7 +16,7 @@ Worked example: **European windstorm**, indexed on peak gust (m/s).
 If you cannot answer the first one, you do not have a hazard spec yet — you have
 several. Split them.
 
-## 2. Write `hazards/euro_windstorm.py`
+## 2. Write `hazardlab/hazards/euro_windstorm.py`
 
 ```python
 from hazardlab.spec import ClassParams, HazardSpec, HistoricalEvent
@@ -85,7 +85,7 @@ and let `classify()` do it. Hand-labelling is how the original El Niño catalogu
 came to disagree with its own data on 16 of 22 events.
 
 **Lower-is-worse indices need `higher_is_worse=False`,** and then your
-thresholds are *upper* bounds. See `hazards/indian_monsoon.py`. Flood depth, loss
+thresholds are *upper* bounds. See `hazardlab/hazards/indian_monsoon.py`. Flood depth, loss
 ratios and rainfall percentiles all fall in this category.
 
 **The truncated normal on peak intensity is a within-class smoother.** Its bounds
@@ -94,7 +94,7 @@ already carry. If your peril has a genuine parametric tail — Gutenberg-Richter
 for earthquakes, a Pareto for large losses — replace the peak draw rather than
 tuning the normal.
 
-**Your catalogue determines your prior.** `hazards/earthquake.py` ships a global
+**Your catalogue determines your prior.** `hazardlab/hazards/earthquake.py` ships a global
 M8+ sample, so its empirical prior assigns *zero* probability to Moderate and
 Strong events. That is arithmetically correct and physically nonsense. Use a
 regional catalogue with a stated completeness threshold.
