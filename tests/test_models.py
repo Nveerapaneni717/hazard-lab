@@ -138,6 +138,8 @@ def test_single_class_target_raises_a_useful_error(spec, oni):
     monsoon = get_hazard("indian_monsoon")     # higher_is_worse=False, threshold 96
     y = build_target(oni, monsoon, horizon=6)  # every ONI value is <= 96
     assert y.nunique() == 1
-    X = build_features(oni, monsoon).loc[y.index]
+    X = build_features(oni, monsoon)
+    idx = X.index.intersection(y.index)        # features lose the first 12 rows
+    X, y = X.loc[idx], y.loc[idx]
     with pytest.raises(ValueError, match="only one class"):
         OccurrenceModel().fit(X, y)
