@@ -20,7 +20,6 @@ from hazardlab.models.occurrence import OccurrenceModel
 from hazardlab.models.return_period import ReturnPeriodAnalyzer
 from hazardlab.registry import available, get_hazard
 
-
 # Which bundled series belongs to which hazard. Only ONI ships with the repo;
 # the rest are yours to supply, and this mapping is where you say so.
 SERIES_FOR = {
