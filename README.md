@@ -1,5 +1,12 @@
 # hazard-lab
 
+[![CI](https://github.com/OWNER/hazard-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/OWNER/hazard-lab/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/OWNER/hazard-lab/actions/workflows/codeql.yml/badge.svg)](https://github.com/OWNER/hazard-lab/actions/workflows/codeql.yml)
+[![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue)](pyproject.toml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+
+<!-- Replace OWNER above with your GitHub username once the repo is pushed. -->
+
 A small, readable skeleton for **probabilistic catastrophe modelling** — occurrence,
 severity, extreme value, Monte Carlo, impact — that is not tied to any one peril.
 
@@ -50,10 +57,14 @@ and a reproducible path through it.
 
 ```bash
 git clone <your-fork-url> && cd hazard-lab
-python -m venv .venv && .venv/bin/activate       # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
+python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
+pip install -e .                                   # add "[dev]" for tests and linting
 python examples/01_quickstart.py
 ```
+
+`pip install -e .` rather than `pip install -r requirements.txt`: the latter
+installs the dependencies but not `hazard-lab` itself, so `import hazardlab`
+would fail from a fresh clone.
 
 The quickstart needs no network — a public-domain NOAA ONI series is bundled.
 

@@ -1,0 +1,47 @@
+name: New hazard spec
+description: Propose or contribute a hazard the library does not model yet
+labels: ["hazard-spec"]
+body:
+  - type: input
+    id: peril
+    attributes:
+      label: Peril
+      description: "e.g. European windstorm, wildfire, riverine flood"
+    validations:
+      required: true
+
+  - type: input
+    id: index
+    attributes:
+      label: Intensity index
+      description: The single number that measures severity, and its units.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: direction
+    attributes:
+      label: Direction
+      options:
+        - Higher index is worse
+        - Lower index is worse
+    validations:
+      required: true
+
+  - type: textarea
+    id: catalogue
+    attributes:
+      label: Event catalogue source
+      description: |
+        Where do the historical events come from, and how many are there?
+        Twenty or more blocks before quoting return periods.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Before submitting
+      options:
+        - label: Severity will be derived from thresholds, not hand-labelled
+        - label: I will mark placeholder impact figures as such in `notes`

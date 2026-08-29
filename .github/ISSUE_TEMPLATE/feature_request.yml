@@ -1,0 +1,28 @@
+name: Feature request
+description: Suggest a capability, or pick up something from KNOWN_LIMITATIONS.md
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What can you not currently do?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed approach
+      description: |
+        If this addresses an item in KNOWN_LIMITATIONS.md, say which one. The
+        walk-forward backtest harness is the most valuable missing piece.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope check
+      options:
+        - label: This does not require `hazardlab/` to know anything peril-specific

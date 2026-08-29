@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/security/advisories
+    about: Report privately through GitHub Security Advisories, not a public issue.
+  - name: Known limitations
+    url: https://github.com/
+    about: Several gaps are documented and intentional. Please read KNOWN_LIMITATIONS.md first.
