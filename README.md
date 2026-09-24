@@ -70,6 +70,21 @@ The quickstart needs no network — a public-domain NOAA ONI series is bundled.
 python examples/01_quickstart.py --hazard indian_monsoon
 ```
 
+## Status
+
+Tested on **Linux, Windows and macOS**, Python **3.10 / 3.11 / 3.12**, from a
+clean clone in both editable and non-editable installs. CI runs the full suite,
+a secret scan, a dependency audit and CodeQL on every push and pull request.
+
+| | |
+|---|---|
+| Tests | 39, covering the models, the specs and every fixed defect |
+| Hazards | 5 shipped — one worked example, four templates |
+| Runtime dependencies | 4 (numpy, pandas, scipy, scikit-learn) |
+| Network calls | none; a public-domain sample is bundled |
+
+Version 0.1.0. The API is young and may change; `CHANGELOG.md` records what did.
+
 ## Swapping the hazard
 
 This is the whole point. A hazard is one file in `hazardlab/hazards/`:
