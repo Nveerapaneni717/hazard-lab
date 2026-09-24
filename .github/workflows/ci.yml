@@ -16,11 +16,20 @@ concurrency:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    # Full Python spread on Linux, plus one run each on Windows and macOS.
+    # Most of this project's readers are on Windows, so "it works on Linux" is
+    # not the guarantee that matters to them.
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
+        os: [ubuntu-latest]
         python-version: ["3.10", "3.11", "3.12"]
+        include:
+          - os: windows-latest
+            python-version: "3.12"
+          - os: macos-latest
+            python-version: "3.12"
     steps:
       - uses: actions/checkout@v4
         with:
@@ -75,3 +84,21 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt pip-audit
           pip-audit --strict
+
+  # Single stable check for branch protection to require.
+  #
+  # Without this, the ruleset has to name every matrix leg -- "test (ubuntu-latest,
+  # 3.12)" and so on -- and any change to the matrix silently blocks every merge
+  # until someone notices the required check no longer exists. Requiring this one
+  # job instead means the matrix can change freely.
+  ci-complete:
+    if: always()
+    needs: [test, security]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail if any upstream job did not succeed
+        if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') || contains(needs.*.result, 'skipped')
+        run: |
+          echo "one or more CI jobs did not succeed"
+          exit 1
+      - run: echo "all CI jobs succeeded"

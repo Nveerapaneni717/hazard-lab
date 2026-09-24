@@ -5,6 +5,19 @@ Versioning is [semantic](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- CI now tests **Windows and macOS** alongside Linux. The code was verified on
+  Windows by hand but nothing guarded it, and most readers of this repo are on
+  Windows -- that is where a silent regression would actually hurt.
+- A `ci-complete` aggregate job that succeeds only if every other job did.
+  Branch protection requires that one name instead of enumerating each matrix
+  leg, so changing the matrix can no longer silently block merges when a
+  required check name stops existing.
+- `.gitleaks.toml`, allowlisting one documented false positive: gitleaks'
+  generic-api-key rule matches `key = "..."` and `HazardSpec.key` is a field
+  name. Scoped to snake_case identifiers in four paths.
+- A Status section in the README.
+
 ## [0.1.0] - 2026-08-22
 
 First public release. Extracted from an actuarial El Nino study presented to the
