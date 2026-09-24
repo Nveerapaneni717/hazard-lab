@@ -28,6 +28,7 @@ dependency, an accidentally committed credential, and an unreviewed change.
 |---|---|---|
 | Secret scanning at commit time | `.pre-commit-config.yaml` (gitleaks) | credentials reaching history |
 | Secret scanning in CI | `.github/workflows/ci.yml` | credentials reaching `main` |
+| Scanner config + allowlist | `.gitleaks.toml` | one documented false positive, narrowly scoped |
 | Static analysis | CodeQL workflow | injection, unsafe deserialisation |
 | Dependency audit | `pip-audit` in CI | known-vulnerable packages |
 | Dependency updates | `.github/dependabot.yml` | staying on vulnerable versions |

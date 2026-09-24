@@ -1,0 +1,30 @@
+# gitleaks configuration for hazard-lab
+#
+# Inherits every default rule, then allows exactly one documented false
+# positive. Keep this file narrow: a broad allowlist is worse than no scanner,
+# because it looks like protection while providing none.
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = """
+HazardSpec.key is a hazard identifier, not a credential.
+
+Gitleaks' generic-api-key rule matches `key = "<12+ chars>"`, and every hazard
+spec in hazardlab/hazards/ declares `key="atlantic_hurricane"` and similar. The
+regex below only permits snake_case identifiers -- lowercase letters, digits and
+underscores, starting with a letter. Real credentials are high-entropy and mixed
+case, so they do not match this shape and are still reported.
+
+If you rename the field, delete this allowlist rather than leaving it behind.
+"""
+regexes = [
+  '''\bkey\s*=\s*["'][a-z][a-z0-9_]{2,39}["']''',
+]
+paths = [
+  '''hazardlab/hazards/.*\.py''',
+  '''examples/.*''',
+  '''tests/.*\.py''',
+  '''README\.md''',
+]
