@@ -53,12 +53,33 @@ and a reproducible path through it.
 
 ## Install and run
 
+**macOS / Linux**
+
 ```bash
-git clone https://github.com/Nveerapaneni717/hazard-lab.git && cd hazard-lab
-python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
-pip install -e .                                   # add "[dev]" for tests and linting
+git clone https://github.com/Nveerapaneni717/hazard-lab.git
+cd hazard-lab
+python -m venv .venv
+source .venv/bin/activate
+pip install -e .                 # add "[dev]" for tests and linting
 python examples/01_quickstart.py
 ```
+
+**Windows (PowerShell)**
+
+```powershell
+git clone https://github.com/Nveerapaneni717/hazard-lab.git
+cd hazard-lab
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -e .                 # add "[dev]" for tests and linting
+python examples/01_quickstart.py
+```
+
+One command per line on purpose: Windows PowerShell 5.1, still the default on
+many machines, has no `&&`. If PowerShell refuses to run the activation script
+it is blocking local scripts in general, not this one -- allow them for the
+current window with
+`Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned`.
 
 `pip install -e .` rather than `pip install -r requirements.txt`: the latter
 installs the dependencies but not `hazard-lab` itself, so `import hazardlab`

@@ -5,8 +5,20 @@ validation machinery listed in [`KNOWN_LIMITATIONS.md`](KNOWN_LIMITATIONS.md).
 
 ## Setup
 
+**macOS / Linux**
+
 ```bash
-python -m venv .venv && .venv/bin/activate      # Windows: .venv\Scripts\activate
+python -m venv .venv
+source .venv/bin/activate
+pip install -e ".[dev]"
+pre-commit install
+```
+
+**Windows (PowerShell)**
+
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
 pip install -e ".[dev]"
 pre-commit install
 ```
