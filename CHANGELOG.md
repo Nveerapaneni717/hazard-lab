@@ -5,7 +5,21 @@ Versioning is [semantic](https://semver.org/).
 
 ## [Unreleased]
 
+Nothing yet.
+
+## [0.2.0] - 2026-09-25
+
+The first release that is actually published. Minor rather than patch because
+the hazard specs moved package, which breaks any import written against 0.1.0.
+
+0.1.0 is recorded below for provenance but is deliberately left untagged: it was
+never released publicly, and it carries the packaging defect fixed here, so a
+checkout of it fails at its own documented quickstart.
+
 ### Added
+- CI tests every Python version `requires-python` admits -- 3.10 through 3.14 --
+  rather than stopping at 3.12 while the metadata promised `>=3.10`. Windows and
+  macOS move to 3.13. A badge nobody verifies is worse than no badge.
 - Runtime hazard registration -- `register(spec)` and `unregister(key)` -- so a
   spec can live in your own project instead of being dropped into site-packages.
 - CI now tests **Windows and macOS** alongside Linux. The code was verified on
@@ -26,6 +40,10 @@ Versioning is [semantic](https://semver.org/).
   scan by event and a push or pull request run walks only its own commits, so
   nothing was ever scanning what was already in the repository.
 - A Status section in the README.
+- A comment on `test_monte_carlo_requires_explicit_probabilities` explaining
+  that its wrong-arity call is deliberate. CodeQL reports it, the alert is
+  dismissed as "used in tests", and the only way to satisfy the scanner in code
+  is to restore the default probabilities -- i.e. to reintroduce the defect.
 - Five tests, covering runtime registration and the single-class guard. 34 -> 39.
 
 ### Changed
