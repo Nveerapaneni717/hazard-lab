@@ -26,6 +26,10 @@ def oni():
 def test_monte_carlo_requires_explicit_probabilities(spec):
     """The original engine defaulted to p=0.65/0.55 and a catalogue built from
     those defaults was mistaken for fitted output. There is now no default."""
+    # The missing arguments below are the whole point, so CodeQL reports "wrong
+    # number of arguments in a class instantiation" here and the alert is
+    # dismissed as "used in tests". Do not silence it by giving MonteCarloEngine
+    # default probabilities -- that is precisely the defect this guards against.
     with pytest.raises(TypeError):
         MonteCarloEngine(spec)                       # no probabilities at all
     with pytest.raises(ValueError):
