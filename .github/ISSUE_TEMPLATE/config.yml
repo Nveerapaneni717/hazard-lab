@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
   - name: Security vulnerability
-    url: https://github.com/security/advisories
+    url: https://github.com/Nveerapaneni717/hazard-lab/security/advisories/new
     about: Report privately through GitHub Security Advisories, not a public issue.
   - name: Known limitations
-    url: https://github.com/
-    about: Several gaps are documented and intentional. Please read KNOWN_LIMITATIONS.md first.
+    url: https://github.com/Nveerapaneni717/hazard-lab/blob/main/KNOWN_LIMITATIONS.md
+    about: Several gaps are documented and intentional. Please read this first.
