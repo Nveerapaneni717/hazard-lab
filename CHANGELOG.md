@@ -6,6 +6,8 @@ Versioning is [semantic](https://semver.org/).
 ## [Unreleased]
 
 ### Added
+- Runtime hazard registration -- `register(spec)` and `unregister(key)` -- so a
+  spec can live in your own project instead of being dropped into site-packages.
 - CI now tests **Windows and macOS** alongside Linux. The code was verified on
   Windows by hand but nothing guarded it, and most readers of this repo are on
   Windows -- that is where a silent regression would actually hurt.
@@ -16,13 +18,64 @@ Versioning is [semantic](https://semver.org/).
 - `.gitleaks.toml`, allowlisting one documented false positive: gitleaks'
   generic-api-key rule matches `key = "..."` and `HazardSpec.key` is a field
   name. Scoped to snake_case identifiers in four paths.
+- Community files: contributing guide, code of conduct, security policy, and
+  issue and pull request templates.
+- `py.typed`, so type checkers read the annotations in an installed copy.
+- A weekly `schedule` and a `workflow_dispatch` trigger on the CI workflow, so
+  a full-history secret scan is reachable at all. gitleaks-action scopes its
+  scan by event and a push or pull request run walks only its own commits, so
+  nothing was ever scanning what was already in the repository.
 - A Status section in the README.
+- Five tests, covering runtime registration and the single-class guard. 34 -> 39.
 
-## [0.1.0] - 2026-08-22
+### Changed
+- **Breaking.** Hazard specs moved from a top-level `hazards` package to
+  `hazardlab.hazards`. Installing the project no longer claims the generic
+  top-level name `hazards` in site-packages, where it could collide with
+  anything else that wants it. Replace `from hazards.x import SPEC` with
+  `from hazardlab.hazards.x import SPEC`.
+- Install instructions are split into macOS/Linux and Windows PowerShell blocks,
+  one command per line. The single block they replace chained with `&&` and
+  activated the venv with `source`; Windows PowerShell 5.1 has neither, so the
+  first thing most readers copied did not run.
+- The quickstart states its data boundary explicitly instead of implying one.
 
-First public release. Extracted from an actuarial El Nino study presented to the
-Institute of Actuaries of India, and generalised so the engine is not tied to
-any one peril.
+### Fixed
+- **A fresh clone did not work.** `requirements.txt` installs the dependencies
+  but not the project itself, so `import hazardlab` failed and
+  `python examples/01_quickstart.py` put `examples/` on `sys.path` rather than
+  the repository root. CI and the README now use `pip install -e .`. The test
+  suite had masked this -- pytest inserts the rootdir for itself, so tests passed
+  while the documented entry point did not.
+- `SECURITY.md` and `.github/dependabot.yml` both claimed Dependabot would
+  propose SHA pins for actions referenced by tag. It does not: it follows the
+  reference style already in use. Corrected in both, with the manual migration
+  path written down instead.
+- `SECURITY.md` described the direct dependencies as pinned. They are
+  lower-bounded with a major-version cap, which is a weaker guarantee.
+- `KNOWN_LIMITATIONS.md` section 10 was headed "Two defects" while describing
+  three, and gave the class-separation step as 3-4 within-class standard
+  deviations where `sensitivity()` returns 3.0 to 5.0.
+- The README described CI as running on "every push and pull request". Both
+  workflows are scoped to `main`, so a push to a feature branch runs nothing
+  until a pull request opens.
+- **CI was red on `main` from the first push.** gitleaks-action builds its scan
+  range as `<first commit of the push>^..<last commit>`. On a repository's very
+  first push that first commit is the root commit, which has no parent, so git
+  exited with `unknown revision` and the scan failed before inspecting anything.
+  No secret was involved. All five test legs passed; `ci-complete` then failed
+  because the security job had, which is the aggregate check working correctly.
+  The condition cannot recur, since a root commit is pushed exactly once, so the
+  next push to `main` clears it. Confirmed locally with gitleaks v8.18.4 -- the
+  version `.pre-commit-config.yaml` pins -- a full-history scan of every commit
+  against the existing `.gitleaks.toml` reports no leaks.
+
+## [0.1.0] - 2026-08-29
+
+The initial extraction. Taken from an actuarial El Niño study presented to the
+Institute of Actuaries of India on 22 August 2026, and generalised so the engine
+is not tied to any one peril. Dated to the commit that created it, not to the
+seminar; the repository was not published until the following month.
 
 ### Added
 - `HazardSpec`: a declarative description of a peril (index, thresholds, event
@@ -41,7 +94,8 @@ any one peril.
 - 34 tests, several of them regression guards for the defects below.
 
 ### Fixed
-Three defects carried by the original study, each now covered by a test.
+Three defects, each now covered by a test. The first two were carried over from
+the original study; the third was introduced here and caught before release.
 
 - **Simulation ran on constructor defaults.** A catalogue generated from
   `p=0.65/0.55` defaults was mistaken for fitted output; the headline number

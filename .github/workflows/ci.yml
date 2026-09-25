@@ -5,6 +5,15 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  # The secret scan is scoped by event. gitleaks-action derives its range as
+  # <first commit of the push or PR>^..<last>, so a push run and a pull request
+  # run each walk only their own commits -- a secret already sitting in older
+  # history is invisible to both. On any other event it drops --log-opts and
+  # scans the whole repository. These two triggers are what make a full-history
+  # scan reachable: weekly without being asked, and on demand on any branch.
+  schedule:
+    - cron: "17 3 * * 1"
+  workflow_dispatch:
 
 # Least privilege: this workflow only ever needs to read the repository.
 permissions:

@@ -6,7 +6,9 @@ updates:
       interval: "weekly"
     open-pull-requests-limit: 5
 
-  # Also proposes SHA pins for the actions referenced by tag in ci.yml.
+  # Keeps the actions in ci.yml and codeql.yml current. Dependabot follows the
+  # reference style already in use -- these are pinned by tag, so it proposes
+  # newer tags and will never convert them to SHA pins on its own.
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
