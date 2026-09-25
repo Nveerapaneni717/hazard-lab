@@ -21,6 +21,10 @@ Versioning is [semantic](https://semver.org/).
 - Community files: contributing guide, code of conduct, security policy, and
   issue and pull request templates.
 - `py.typed`, so type checkers read the annotations in an installed copy.
+- A weekly `schedule` and a `workflow_dispatch` trigger on the CI workflow, so
+  a full-history secret scan is reachable at all. gitleaks-action scopes its
+  scan by event and a push or pull request run walks only its own commits, so
+  nothing was ever scanning what was already in the repository.
 - A Status section in the README.
 - Five tests, covering runtime registration and the single-class guard. 34 -> 39.
 
@@ -55,6 +59,16 @@ Versioning is [semantic](https://semver.org/).
 - The README described CI as running on "every push and pull request". Both
   workflows are scoped to `main`, so a push to a feature branch runs nothing
   until a pull request opens.
+- **CI was red on `main` from the first push.** gitleaks-action builds its scan
+  range as `<first commit of the push>^..<last commit>`. On a repository's very
+  first push that first commit is the root commit, which has no parent, so git
+  exited with `unknown revision` and the scan failed before inspecting anything.
+  No secret was involved. All five test legs passed; `ci-complete` then failed
+  because the security job had, which is the aggregate check working correctly.
+  The condition cannot recur, since a root commit is pushed exactly once, so the
+  next push to `main` clears it. Confirmed locally with gitleaks v8.18.4 -- the
+  version `.pre-commit-config.yaml` pins -- a full-history scan of every commit
+  against the existing `.gitleaks.toml` reports no leaks.
 
 ## [0.1.0] - 2026-08-29
 
