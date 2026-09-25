@@ -80,9 +80,10 @@ everything else within that class. There is no copula. A simulation landing at
 the top of a class's intensity range does not get a correspondingly worse loss.
 
 Run `hazardlab.impact.translator.sensitivity(spec, impact)`: for the bundled
-El Niño spec, the step between adjacent class means is **3–4 within-class
-standard deviations**. One class of misclassification moves the answer further
-than every other source of uncertainty in the model combined.
+El Niño spec, the step between adjacent class means is **3.0 to 5.0 within-class
+standard deviations**, across all three impact measures. One class of
+misclassification moves the answer further than every other source of
+uncertainty in the model combined.
 
 **The severity distribution is the model.** If you disagree with it, everything
 moves and nothing pushes back.
@@ -138,7 +139,7 @@ published literature or, in the template hazards, an outright placeholder.
 None is estimated from data. The four non-El-Niño specs say `TEMPLATE` in their
 `notes` field for exactly this reason.
 
-## 10. Two defects that were fixed, recorded because the failure modes generalise
+## 10. Three defects that were fixed, recorded because the failure modes generalise
 
 **Simulation ran on default parameters.** The engine used to carry
 `p_2026=0.65, p_2027=0.55` as constructor defaults. A catalogue generated from
