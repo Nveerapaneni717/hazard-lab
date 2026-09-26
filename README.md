@@ -5,8 +5,8 @@
 [![Python](https://img.shields.io/badge/python-3.10--3.14-blue)](pyproject.toml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-A small, readable skeleton for **probabilistic catastrophe modelling** — occurrence,
-severity, extreme value, Monte Carlo, impact — that is not tied to any one peril.
+A small, readable skeleton for **probabilistic catastrophe modelling** - occurrence,
+severity, extreme value, Monte Carlo, impact - that is not tied to any one peril.
 
 You describe a hazard once, in a single declarative file. Everything else runs unchanged.
 
@@ -36,7 +36,7 @@ spec = get_hazard("elnino")            # or atlantic_hurricane, earthquake,
 ## Why this exists
 
 It began as an actuarial study of El Niño for a seminar of the Institute of
-Actuaries of India. The interesting part turned out not to be El Niño — it was
+Actuaries of India. The interesting part turned out not to be El Niño - it was
 that the *shape* of the problem is the same for hurricanes, earthquakes,
 convective storms and monsoon failure:
 
@@ -85,7 +85,7 @@ current window with
 installs the dependencies but not `hazard-lab` itself, so `import hazardlab`
 would fail from a fresh clone.
 
-The quickstart needs no network — a public-domain NOAA ONI series is bundled.
+The quickstart needs no network - a public-domain NOAA ONI series is bundled.
 
 ```
 python examples/01_quickstart.py --hazard indian_monsoon
@@ -100,14 +100,14 @@ Python **3.10 through 3.14**.
 | | |
 |---|---|
 | Tests | 39, covering the models, the specs and every fixed defect |
-| Hazards | 5 shipped — one worked example, four templates |
+| Hazards | 5 shipped - one worked example, four templates |
 | Runtime dependencies | 4 (numpy, pandas, scipy, scikit-learn) |
 | Network calls | none; a public-domain sample is bundled |
 
 One caveat on that coverage, stated rather than glossed: the non-editable
 install (`pip install .`) has been checked by hand but is not in CI, so read it
 as verified at a point in time rather than continuously. The Python range is
-exact — CI tests every version `requires-python` admits, so the badge is a
+exact - CI tests every version `requires-python` admits, so the badge is a
 claim the build actually checks.
 
 Version 0.2.0. The API is young and may change; `CHANGELOG.md` records what did.
@@ -137,7 +137,7 @@ Drop it in `hazardlab/hazards/`, and `get_hazard("my_peril")` finds it. `spec.va
 runs automatically and tells you what is incoherent before anything else does.
 
 **Installed hazard-lab as a dependency rather than cloning it?** Keep your specs
-in your own project and register them at runtime — no need to edit site-packages:
+in your own project and register them at runtime - no need to edit site-packages:
 
 ```python
 from hazardlab import register, get_hazard, MonteCarloEngine
@@ -166,12 +166,12 @@ small is bad, start from that file.
 
 ```
 hazardlab/
-  spec.py                  HazardSpec — the only peril-aware object
+  spec.py                  HazardSpec - the only peril-aware object
   registry.py              discovery: get_hazard("elnino")
   io/series.py             load an index series (bundled / CSV / your own frame)
   features/builder.py      causal features from any index series
-  models/occurrence.py     P(event) — calibrated logistic regression
-  models/severity.py       P(class | event) — multinomial + shrinkage to prior
+  models/occurrence.py     P(event) - calibrated logistic regression
+  models/severity.py       P(class | event) - multinomial + shrinkage to prior
   models/return_period.py  GEV block maxima → return levels
   models/monte_carlo.py    occurrence → severity → conditional impacts
   impact/translator.py     severity → consequence, and its sensitivity
@@ -186,17 +186,17 @@ The dependency arrow only ever points one way: `hazardlab/hazards/` knows about
 
 No backtest harness. No validated predictive intervals. No fitted impact
 functions. These are absences with reasons, written down in
-[`KNOWN_LIMITATIONS.md`](KNOWN_LIMITATIONS.md) — several are framed as exercises,
+[`KNOWN_LIMITATIONS.md`](KNOWN_LIMITATIONS.md) - several are framed as exercises,
 because working out *why* a model is wrong teaches more than reading one that
 claims it is right.
 
 ## Licence and attribution
 
-MIT — see [`LICENSE`](LICENSE).
+MIT - see [`LICENSE`](LICENSE).
 
 Author: **Nishanth Veerapaneni**. Originally presented to the Institute of
 Actuaries of India, August 2026. Bundled ONI data is NOAA Climate Prediction
 Center output, a US Government work in the public domain.
 
-Contributions welcome — see [`CONTRIBUTING.md`](CONTRIBUTING.md). Security policy:
+Contributions welcome - see [`CONTRIBUTING.md`](CONTRIBUTING.md). Security policy:
 [`SECURITY.md`](SECURITY.md).
