@@ -119,7 +119,7 @@ as verified at a point in time rather than continuously. The Python range is
 exact - CI tests every version `requires-python` admits, so the badge is a
 claim the build actually checks.
 
-Version 0.2.0. The API is young and may change; `CHANGELOG.md` records what did.
+Version 0.2.1. The API is young and may change; `CHANGELOG.md` records what did.
 
 ## Swapping the hazard
 
