@@ -5,6 +5,15 @@ Versioning is [semantic](https://semver.org/).
 
 ## [Unreleased]
 
+Nothing yet.
+
+## [0.2.1] - 2026-09-26
+
+A patch release, and entirely about the first ten minutes of using this project.
+Nothing in the library changed. 0.2.0 shipped a README whose very first install
+command failed on the pip a fresh virtualenv hands you, which is the worst place
+to be wrong.
+
 ### Fixed
 - **The documented install failed on the pip a fresh venv gives you.**
   `python -m venv` provides whichever pip shipped with your Python, and an older

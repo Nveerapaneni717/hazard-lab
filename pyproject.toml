@@ -1,6 +1,6 @@
 [project]
 name = "hazard-lab"
-version = "0.2.0"
+version = "0.2.1"
 description = "A hazard-agnostic skeleton for probabilistic catastrophe modelling."
 readme = "README.md"
 requires-python = ">=3.10"
