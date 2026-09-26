@@ -1,4 +1,4 @@
-"""HazardSpec — the single object that makes this library hazard-agnostic.
+"""HazardSpec - the single object that makes this library hazard-agnostic.
 
 Everything downstream (occurrence, severity, return periods, Monte Carlo,
 impact translation) reads its hazard-specific knowledge from a HazardSpec.

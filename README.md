@@ -60,6 +60,7 @@ git clone https://github.com/Nveerapaneni717/hazard-lab.git
 cd hazard-lab
 python -m venv .venv
 source .venv/bin/activate
+python -m pip install --upgrade pip
 pip install -e .                 # add "[dev]" for tests and linting
 python examples/01_quickstart.py
 ```
@@ -71,6 +72,7 @@ git clone https://github.com/Nveerapaneni717/hazard-lab.git
 cd hazard-lab
 python -m venv .venv
 .venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
 pip install -e .                 # add "[dev]" for tests and linting
 python examples/01_quickstart.py
 ```
@@ -80,6 +82,13 @@ many machines, has no `&&`. If PowerShell refuses to run the activation script
 it is blocking local scripts in general, not this one -- allow them for the
 current window with
 `Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned`.
+
+`python -m pip install --upgrade pip` is not boilerplate. `python -m venv`
+gives you whichever pip shipped with your Python, and an older 3.10 or 3.11
+point release still bundles pip 21.2. Editable installs of a `pyproject.toml`
+project need **pip 21.3 or newer** (PEP 660), so on an older pip the next line
+fails with *"Directory cannot be installed in editable mode"*, an error that
+blames setuptools for what is really pip's age. One upgrade avoids it.
 
 `pip install -e .` rather than `pip install -r requirements.txt`: the latter
 installs the dependencies but not `hazard-lab` itself, so `import hazardlab`
@@ -133,8 +142,13 @@ SPEC = HazardSpec(
 )
 ```
 
-Drop it in `hazardlab/hazards/`, and `get_hazard("my_peril")` finds it. `spec.validate()`
-runs automatically and tells you what is incoherent before anything else does.
+Drop it in `hazardlab/hazards/`, and `get_hazard("my_peril")` finds it.
+`spec.validate()` runs automatically and tells you what is incoherent before
+anything else does.
+
+**Name the file after the key.** Discovery is by module name, so `key="my_peril"`
+must live in `my_peril.py`. Get that wrong and `get_hazard("my_peril")` raises a
+`KeyError` listing the names it did find; your filename will be among them.
 
 **Installed hazard-lab as a dependency rather than cloning it?** Keep your specs
 in your own project and register them at runtime - no need to edit site-packages:

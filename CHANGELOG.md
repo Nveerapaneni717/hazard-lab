@@ -5,7 +5,33 @@ Versioning is [semantic](https://semver.org/).
 
 ## [Unreleased]
 
-Nothing yet.
+### Fixed
+- **The documented install failed on the pip a fresh venv gives you.**
+  `python -m venv` provides whichever pip shipped with your Python, and an older
+  3.10 point release still bundles pip 21.2. Editable installs of a
+  `pyproject.toml` project need pip 21.3 or newer (PEP 660), so following the
+  README verbatim ended at
+
+      ERROR: ... Directory cannot be installed in editable mode
+      (A "pyproject.toml" file was found, but editable mode currently
+       requires a setuptools-based build.)
+
+  which blames setuptools for what is really pip's age. CI never saw it: it runs
+  `python -m pip install --upgrade pip` first, and the README did not. The
+  documented path and the tested path have to be the same path. All four install
+  blocks now upgrade pip, as CI always did. Non-editable `pip install .` was
+  unaffected.
+- The rule that a hazard module must be named after its `key` was written down
+  nowhere. Discovery is by module name, so `key="my_peril"` has to live in
+  `my_peril.py`. Every shipped example happens to match, so it only bit someone
+  choosing their own filename, who got a `KeyError` instead. Now stated in the
+  README, the walkthrough and the registry docstring.
+- `P(at least one)` could still print 1.0000 at low `--sims`. At 500 draws a
+  probability of 4e-4 is unmeasurable, so zero "no event" simulations is routine
+  and the estimate lands exactly on 1, reading as certainty once again. The
+  quickstart now says so where it happens: 0 of N is a resolution limit, not
+  impossibility.
+- Em and en dashes replaced with plain hyphens throughout.
 
 ## [0.2.0] - 2026-09-25
 

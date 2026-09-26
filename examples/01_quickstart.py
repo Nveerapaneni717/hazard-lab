@@ -152,6 +152,15 @@ def main() -> None:
     # calibration gives, arriving this time purely from rounding.
     p_any = s["p_at_least_one"]
     print(f"        P(at least one) = {p_any:.4f}   (P(none) = {1 - p_any:.4f})")
+    n_none = round((1 - p_any) * args.sims)
+    if n_none == 0:
+        # 0 of N is a resolution limit, not impossibility. Without saying so the
+        # line reads as certainty again: the same false impression the saturated
+        # calibration gives, arriving this time from sample size.
+        print(f"          0 of {args.sims:,} simulations had no event, which is a")
+        print(f"          resolution limit: {args.sims:,} draws cannot measure a")
+        print(f"          probability below about {1 / args.sims:.1e}. Read it as")
+        print('          "too rare for this many draws", not as impossible.')
     print(f"        peak {spec.index_name} quantiles = {mc.quantiles('peak_intensity')}")
     print("        (model-internal quantiles, NOT validated coverage)\n")
 

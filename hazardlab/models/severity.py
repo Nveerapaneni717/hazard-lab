@@ -1,4 +1,4 @@
-"""Severity layer — P(class | event occurred), blended with the observed prior."""
+"""Severity layer - P(class | event occurred), blended with the observed prior."""
 from __future__ import annotations
 
 import pandas as pd
