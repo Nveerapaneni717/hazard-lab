@@ -13,10 +13,13 @@ Worked example: **European windstorm**, indexed on peak gust (m/s).
 | What are the class boundaries? | 30 / 38 / 46 / 55 m/s |
 | What does the event cost? | insured loss, € bn |
 
-If you cannot answer the first one, you do not have a hazard spec yet — you have
+If you cannot answer the first one, you do not have a hazard spec yet - you have
 several. Split them.
 
 ## 2. Write `hazardlab/hazards/euro_windstorm.py`
+
+The filename is not decoration: discovery is by module name, so the file must be
+named after the spec's `key`. `key="euro_windstorm"` goes in `euro_windstorm.py`.
 
 ```python
 from hazardlab.spec import ClassParams, HazardSpec, HistoricalEvent
@@ -90,8 +93,8 @@ ratios and rainfall percentiles all fall in this category.
 
 **The truncated normal on peak intensity is a within-class smoother.** Its bounds
 are the class boundaries, so it cannot add information the class label does not
-already carry. If your peril has a genuine parametric tail — Gutenberg-Richter
-for earthquakes, a Pareto for large losses — replace the peak draw rather than
+already carry. If your peril has a genuine parametric tail - Gutenberg-Richter
+for earthquakes, a Pareto for large losses - replace the peak draw rather than
 tuning the normal.
 
 **Your catalogue determines your prior.** `hazardlab/hazards/earthquake.py` ships a global

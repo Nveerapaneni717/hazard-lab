@@ -4,6 +4,8 @@ Two ways to add a hazard:
 
 1. Drop a module in `hazardlab/hazards/` defining a module-level `SPEC`. Best
    if you cloned the repo, which is the intended path for learning from it.
+   Discovery is by module name, so name the file after the spec's key:
+   `key="euro_windstorm"` belongs in `euro_windstorm.py`.
 
 2. Call `register(spec)` at runtime. Best if you installed hazard-lab as a
    dependency and keep your specs in your own project, where they belong.

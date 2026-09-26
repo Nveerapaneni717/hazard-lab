@@ -1,4 +1,4 @@
-"""Return-period layer — GEV block maxima on any peak-intensity series."""
+"""Return-period layer - GEV block maxima on any peak-intensity series."""
 from __future__ import annotations
 
 import numpy as np

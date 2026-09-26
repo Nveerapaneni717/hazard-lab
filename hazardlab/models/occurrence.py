@@ -1,4 +1,4 @@
-"""Occurrence layer — P(event onset within the forecast horizon).
+"""Occurrence layer - P(event onset within the forecast horizon).
 
 Hazard-agnostic: it takes a feature matrix and a binary target. The only thing
 that varies by peril is how those were built (see hazardlab.features.builder).

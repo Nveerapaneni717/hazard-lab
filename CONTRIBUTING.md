@@ -10,6 +10,7 @@ validation machinery listed in [`KNOWN_LIMITATIONS.md`](KNOWN_LIMITATIONS.md).
 ```bash
 python -m venv .venv
 source .venv/bin/activate
+python -m pip install --upgrade pip
 pip install -e ".[dev]"
 pre-commit install
 ```
@@ -19,6 +20,7 @@ pre-commit install
 ```powershell
 python -m venv .venv
 .venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
 pip install -e ".[dev]"
 pre-commit install
 ```
@@ -45,7 +47,7 @@ invented numbers throughout.
 **Anything from the limitations list.** The walk-forward backtest harness is the
 single most valuable missing piece, followed by a calibration/coverage test.
 
-**A defect you found.** Especially one that produces plausible-looking numbers —
+**A defect you found.** Especially one that produces plausible-looking numbers -
 those are the dangerous ones, and this project has shipped three.
 
 ## What to avoid
@@ -75,4 +77,4 @@ simplification is exactly what broke it the first time.
 This project was built with substantial AI assistance and there is no
 expectation that contributions avoid it. Do say so in the pull request
 description if a change is largely model-generated, and satisfy yourself that
-it is correct before submitting — the review burden is yours either way.
+it is correct before submitting - the review burden is yours either way.

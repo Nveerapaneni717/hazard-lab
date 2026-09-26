@@ -153,7 +153,7 @@ no default to fall through to.
 
 **A hand-entered catalogue drifted from the data.** 16 of 22 hardcoded peaks
 disagreed with the observed series. Two changed severity class - most visibly
-1997–98 recorded as ONI 2.8 / Extreme when the observed peak is 2.40 / Super
+1997-98 recorded as ONI 2.8 / Extreme when the observed peak is 2.40 / Super
 (2.8 appears to be a Niño-3.4 SST value pasted into an ONI column). The QC check
 that should have caught it tested `> 0.4`, and the error was exactly 0.40.
 
