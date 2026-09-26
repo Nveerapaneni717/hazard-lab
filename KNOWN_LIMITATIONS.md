@@ -54,8 +54,9 @@ latest row returns 1.000.
 A probability of exactly 1 is not defensible actuarially — it asserts the
 complement is impossible on the basis of a few dozen events.
 
-`OccurrenceModel.predict_latest()` now raises a `RuntimeWarning` when this
-happens. Read it as *"outside the calibrated range"*, not as certainty. Pass
+`OccurrenceModel.predict_latest()` raises a `RuntimeWarning` when this happens,
+and `examples/01_quickstart.py` catches it, says so in the output, and refits
+without calibration so the number it carries into the simulation is usable. Read it as *"outside the calibrated range"*, not as certainty. Pass
 `calibrate=False` when you need a usable number in the tail.
 
 ## 4. Reported AUC is an optimistic upper bound

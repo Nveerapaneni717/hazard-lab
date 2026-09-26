@@ -10,7 +10,11 @@ from __future__ import annotations
 import argparse
 import warnings
 
-warnings.filterwarnings("ignore")
+# Quieten third-party deprecation chatter only. This project's own warnings must
+# get through: a blanket filterwarnings("ignore") hid the saturation warning
+# below, which is the single most important thing this example has to say.
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+warnings.filterwarnings("ignore", category=FutureWarning)
 
 from hazardlab.features.builder import annual_maxima, build_features, build_target
 from hazardlab.impact.translator import sensitivity
@@ -32,9 +36,16 @@ SERIES_FOR = {
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--hazard", default="elnino", choices=available())
-    ap.add_argument("--sims", type=int, default=10_000)
+    ap = argparse.ArgumentParser(
+        description="Run the whole hazard-lab pipeline against one hazard spec.",
+        epilog="Only 'elnino' ships with an index series, so only it can fit the "
+               "occurrence and return-period layers. Every other hazard runs the "
+               "Monte Carlo and impact layers on a stated base rate.",
+    )
+    ap.add_argument("--hazard", default="elnino", choices=available(),
+                    help="which shipped hazard spec to run (default: elnino)")
+    ap.add_argument("--sims", type=int, default=10_000,
+                    help="Monte Carlo iterations (default: 10000)")
     args = ap.parse_args()
 
     spec = get_hazard(args.hazard)
@@ -68,12 +79,36 @@ def main() -> None:
         # last LABELLED row instead silently hands you a stale vintage. The
         # project this library came from presented a March-vintage probability
         # in August, while the index had already tripled.
-        p_next = occ.predict_latest(X_all)
-        p_stale = occ.predict_latest(X_fit)
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter("always", RuntimeWarning)
+            p_next = occ.predict_latest(X_all)
+            p_stale = occ.predict_latest(X_fit)
+        saturated = any(issubclass(w.category, RuntimeWarning) for w in caught)
+
         print("OCCURRENCE")
         print(f"        {occ.report()}")
-        print(f"        latest features {X_all.index[-1].date()} -> P = {p_next:.3f}   <- use this")
-        print(f"        last labelled   {idx[-1].date()} -> P = {p_stale:.3f}   <- stale vintage\n")
+        print(f"        latest features {X_all.index[-1].date()} -> P = {p_next:.3f}")
+        print(f"        last labelled   {idx[-1].date()} -> P = {p_stale:.3f}   <- stale vintage")
+
+        if saturated:
+            # A probability of exactly 1 is not a forecast, and handing one to a
+            # first-time reader labelled "use this" is worse than useless. Isotonic
+            # calibration is a step function: anything past its outermost bin comes
+            # back as exactly 0 or 1. Refit uncalibrated for a number that can
+            # actually be carried into the simulation below.
+            p_saturated = p_next
+            raw = OccurrenceModel(calibrate=False).fit(X_fit, y_fit)
+            p_next = raw.predict_latest(X_all, warn_saturated=False)
+            print()
+            print(f"        ^ P = {p_saturated:.3f} is SATURATION, not certainty."
+                  " Isotonic")
+            print("          calibration is a step function, so anything beyond its")
+            print("          outermost bin returns exactly 0 or 1. Read it as 'off")
+            print("          the top of the fitted range'. KNOWN_LIMITATIONS.md, 3.")
+            print(f"        uncalibrated logistic -> P = {p_next:.3f}   <- use this instead")
+            print("          (OccurrenceModel(calibrate=False)). Still unvalidated:")
+            print("          no backtest exists. KNOWN_LIMITATIONS.md, sections 1-2.")
+        print()
 
         rp = ReturnPeriodAnalyzer(spec).fit(annual_maxima(series))
         print(f"RETURN PERIODS   GEV shape xi = {rp.shape():.3f}")
@@ -92,14 +127,13 @@ def main() -> None:
     # Probabilities are explicit and required -- there is no default to fall
     # through to. Passing the observed prior for severity is a choice: it is
     # defensible and transparent, but it carries no forward-looking information.
+    assumed = None
     if p_next is None:
         # No fitted probability available, so state the assumption out loud
         # rather than letting a placeholder masquerade as an estimate.
         p_next = round(len(spec.events) / 75.0, 3)   # crude base rate
-        print(f"MONTE CARLO   using an ASSUMED base rate of {p_next:.3f} "
-              f"({len(spec.events)} events / 75 periods),")
-        print("              because no fitted occurrence probability exists "
-              "for this hazard.")
+        assumed = (f"ASSUMED base rate {p_next:.3f} ({len(spec.events)} events / 75 "
+                   "periods): no fitted occurrence probability exists here.")
     mc = MonteCarloEngine(
         spec,
         occurrence_probs={2026: round(p_next, 3), 2027: round(p_next, 3)},
@@ -109,9 +143,15 @@ def main() -> None:
     mc.run()
     s = mc.summary()
     print("MONTE CARLO")
+    if assumed:
+        print(f"        {assumed}")
     for period, v in s["periods"].items():
         print(f"        {period}: P(occurrence) = {v['p_occurrence']:.3f}")
-    print(f"        P(at least one) = {s['p_at_least_one']:.3f}")
+    # Four decimals, and the complement alongside. At three, 0.9995 prints as
+    # "1.000" and reads as certainty -- the same false impression the saturated
+    # calibration gives, arriving this time purely from rounding.
+    p_any = s["p_at_least_one"]
+    print(f"        P(at least one) = {p_any:.4f}   (P(none) = {1 - p_any:.4f})")
     print(f"        peak {spec.index_name} quantiles = {mc.quantiles('peak_intensity')}")
     print("        (model-internal quantiles, NOT validated coverage)\n")
 

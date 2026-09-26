@@ -59,6 +59,22 @@ checkout of it fails at its own documented quickstart.
 - The quickstart states its data boundary explicitly instead of implying one.
 
 ### Fixed
+- **The quickstart told first-time readers to use a probability of 1.000.**
+  Isotonic calibration saturates beyond its outermost bin, so the headline
+  occurrence probability came back as exactly 1 -- printed with `<- use this`
+  beside it, and fed straight into the Monte Carlo, which made every number
+  downstream degenerate. `OccurrenceModel.predict_latest` has always raised a
+  `RuntimeWarning` for precisely this case, but `examples/01_quickstart.py`
+  opened with a blanket `warnings.filterwarnings("ignore")` that hid it: the
+  project's own honesty mechanism, silenced in the one place a newcomer looks.
+  The filter now covers third-party deprecations only, the saturation is
+  explained where it occurs, and an uncalibrated refit supplies the probability
+  the simulation actually uses.
+- `P(at least one)` printed to three decimals, so 0.9995 rendered as "1.000" and
+  read as certainty through rounding alone. Now four decimals, with the
+  complement beside it.
+- "MONTE CARLO" was printed twice for any hazard with no bundled index series.
+- `--help` documented neither option.
 - **A fresh clone did not work.** `requirements.txt` installs the dependencies
   but not the project itself, so `import hazardlab` failed and
   `python examples/01_quickstart.py` put `examples/` on `sys.path` rather than
